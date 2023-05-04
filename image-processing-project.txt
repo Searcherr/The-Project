@@ -1,0 +1,13 @@
+The project is supposed to be done in pairs.
+The topic is as follows: prepare a few images that are blurred.
+You can take some images (e.g. photos) that are already blurred or blur the images using OpenCV.
+
+Then try to fix the images in a few ways.
+For instance you can try:
+- the gamma transformation,
+- various linear and nonlinear filters,
+- frequency domain methods (using both Fourier or wavelet transforms),
+- ...
+
+Write a short report about the results: which worked beter, in what case, etc.
+The deadline for projects: 25th of May 2023.
