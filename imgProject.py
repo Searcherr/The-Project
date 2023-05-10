@@ -104,24 +104,6 @@ class ImageEnhancement:
         if self.image is not None:
             self.image = cv2.medianBlur(self.image, filter_size)
 
-    # Fourier transformation
-
-    def fourier_transform(self, method='dft'):
-        if self.image is not None:
-            gray_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
-            if method == 'dft':
-                transformed_image = cv2.dft(np.float32(gray_image), flags=cv2.DFT_COMPLEX_OUTPUT)
-                shifted_image = np.fft.fftshift(transformed_image)
-                magnitude_spectrum = 20 * np.log(cv2.magnitude(shifted_image[:, :, 0], shifted_image[:, :, 1]))
-                self.image = cv2.normalize(magnitude_spectrum, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8UC1)
-            elif method == 'sft':
-                transformed_image = cv2.dft(np.float32(gray_image), flags=cv2.DFT_COMPLEX_OUTPUT)
-                fourier_shift = np.fft.fftshift(fourier)
-                transformed_image = cv2.sftd(gray_image)
-                self.image = cv2.normalize(transformed_image, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8UC1)
-            else:
-                raise ValueError(f"Invalid method '{method}' specified. Supported methods are 'dft' and 'sft'.")
-
     def wavelet_transform(self):
         coeffs2 = pywt.dwt2(self.image, 'bior1.3')
         LL, (LH, HL, HH) = coeffs2
@@ -184,13 +166,59 @@ class WaveletTransform:
             fig.savefig(output_file)
 
 
+class FourierTransform:
+    def __init__(self, input_file):
+        self.input_file = input_file
+        if not os.path.exists(self.input_file):
+            raise ValueError(f"Input file '{self.input_file}' does not exist.")
+        self.image = cv2.cvtColor(cv2.imread(self.input_file), cv2.COLOR_BGR2GRAY)
+        if self.image is None:
+            raise ValueError(f"Failed to load input file '{self.input_file}'.")
+        self.magnitude_spectrum = None
+        self.fft = None
+
+    def set_fft(self):
+        if self.image is not None:
+            dft = cv2.dft(np.float32(self.image), flags=cv2.DFT_COMPLEX_OUTPUT)
+            self.fft = np.fft.fftshift(dft)
+
+    def set_magnitude_spectrum(self):
+        if self.fft is not None:
+            self.magnitude_spectrum = 20 * np.log(cv2.magnitude(self.fft[:, :, 0], self.fft[:, :, 1]))
+
+    def show_frequency_spectrum(self, window_name="Magnitude Spectrum"):
+        if self.magnitude_spectrum is not None:
+            cv2.imshow(window_name, self.magnitude_spectrum)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
+    def show_spectrum_plt(self):
+        if self.magnitude_spectrum is not None:
+            plt.imshow(self.magnitude_spectrum, cmap='gray')
+            plt.title('Input Image')
+            plt.axis('off')
+            plt.show()
+
+    def save_magnitude_image(self, output_file):
+        if self.magnitude_spectrum is not None:
+            cv2.imwrite(output_file, self.magnitude_spectrum)
+
+
+
 if __name__ == "__main__":
+    fourier = FourierTransform("./images/Samoyed-bw.jpg")
+    fourier.set_fft()
+    fourier.set_magnitude_spectrum()
+    fourier.show_frequency_spectrum()
+    fourier.show_spectrum_plt()
+"""    
     original_file = "./images/Samoyed-dog.webp"
 
     wavelet_transform = WaveletTransform(original_file)
     wavelet_transform.perform_wavelet_transform()
     wavelet_transform.show_wavelet_transform()
     wavelet_transform.save_wavelet_transform_figure("./images/wavelet_transform.jpg")
+"""
 """
     enchanted = ImageEnhancement(original_file)
     enchanted.show_image(window_name="Original Image")
