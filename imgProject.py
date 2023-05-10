@@ -2,6 +2,8 @@ import cv2
 import os
 import numpy as np
 import pywt
+import pywt.data
+import matplotlib.pyplot as plt
 
 # Constant matrices for 2d-filtering
 EDGE_DETECTION_KERNEL = np.array([[-1, -1, -1],
@@ -103,6 +105,7 @@ class ImageEnhancement:
             self.image = cv2.medianBlur(self.image, filter_size)
 
     # Fourier transformation
+
     def fourier_transform(self, method='dft'):
         if self.image is not None:
             gray_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
@@ -112,21 +115,16 @@ class ImageEnhancement:
                 magnitude_spectrum = 20 * np.log(cv2.magnitude(shifted_image[:, :, 0], shifted_image[:, :, 1]))
                 self.image = cv2.normalize(magnitude_spectrum, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8UC1)
             elif method == 'sft':
+                transformed_image = cv2.dft(np.float32(gray_image), flags=cv2.DFT_COMPLEX_OUTPUT)
+                fourier_shift = np.fft.fftshift(fourier)
                 transformed_image = cv2.sftd(gray_image)
                 self.image = cv2.normalize(transformed_image, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8UC1)
             else:
                 raise ValueError(f"Invalid method '{method}' specified. Supported methods are 'dft' and 'sft'.")
 
-    """
-    def wavelet_transform(self, wavelet='db1'):
-        coeffs = pywt.wavedec2(self.image, wavelet)
-        reconstructed = pywt.waverec2(coeffs, wavelet)
-        reconstructed = np.clip(reconstructed, 0, 255)
-        reconstructed = reconstructed.astype(np.uint8)
-        #cv2.imshow('Wavelet', reconstructed)
-        #cv2.waitKey(0)
-        #cv2.destroyAllWindows()
-    """
+    def wavelet_transform(self):
+        coeffs2 = pywt.dwt2(self.image, 'bior1.3')
+        LL, (LH, HL, HH) = coeffs2
 
     def show_image(self, window_name='Image'):
         if self.image is not None:
@@ -139,9 +137,49 @@ class ImageEnhancement:
             cv2.imwrite(output_file, self.image)
 
 
+class WaveletTransform:
+    def __init__(self, input_file):
+        self.input_file = input_file
+        if not os.path.exists(self.input_file):
+            raise ValueError(f"Input file '{self.input_file}' does not exist.")
+        self.image = cv2.imread(self.input_file)
+        if self.image is None:
+            raise ValueError(f"Failed to load input file '{self.input_file}'.")
+        self.coeffs = None
+
+    def perform_wavelet_transform(self):
+        if self.image is not None:
+            self.coeffs = pywt.dwt2(self.image, 'bior1.3')
+
+    def show_wavelet_transform(self):
+        if self.coeffs is not None:
+            LL, (LH, HL, HH) = self.coeffs
+            titles = ['Approximation', 'Horizontal detail',
+                      'Vertical detail', 'Diagonal detail']
+            fig = plt.figure(figsize=(12, 3))
+            for i, a in enumerate([LL, LH, HL, HH]):
+                ax = fig.add_subplot(1, 4, i + 1)
+                ax.imshow(a, interpolation="nearest", cmap=plt.cm.gray)
+                ax.set_title(titles[i], fontsize=10)
+                ax.set_xticks([])
+                ax.set_yticks([])
+
+            fig.tight_layout()
+            plt.show()
+
+    def save_image(self, output_file_name):
+        if self.image is not None:
+            plt.imsave(output_file_name, self.image, cmap=plt.cm.gray)
+
+
 if __name__ == "__main__":
     original_file = "./images/Samoyed-dog.webp"
 
+    wavelet_transform = WaveletTransform(original_file)
+    wavelet_transform.perform_wavelet_transform()
+    wavelet_transform.show_wavelet_transform()
+    wavelet_transform.save_image("./images/wavelet_transform.jpg")
+"""
     enchanted = ImageEnhancement(original_file)
     enchanted.show_image(window_name="Original Image")
 
@@ -149,6 +187,10 @@ if __name__ == "__main__":
     enchanted.save_image('./images/edge_detection_image.jpg')
     enchanted.show_image(window_name="BOX_BLUR_KERNEL")
 
+    enchanted.fourier_transform(method="sft")
+    enchanted.save_image('./images/fourier_image.jpg')
+    enchanted.show_image(window_name="Fourier sft")
+"""
 """
     blur = ImageBlur(path_to_file)
     blur.apply_gaussian_blur(kernel_size=(15, 15), sigma_x=0)
