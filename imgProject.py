@@ -167,9 +167,21 @@ class WaveletTransform:
             fig.tight_layout()
             plt.show()
 
-    def save_image(self, output_file_name):
-        if self.image is not None:
-            plt.imsave(output_file_name, self.image, cmap=plt.cm.gray)
+    def save_wavelet_transform_figure(self, output_file):
+        if self.coeffs is not None:
+            LL, (LH, HL, HH) = self.coeffs
+            titles = ['Approximation', 'Horizontal detail',
+                      'Vertical detail', 'Diagonal detail']
+            fig = plt.figure(figsize=(12, 3))
+            for i, a in enumerate([LL, LH, HL, HH]):
+                ax = fig.add_subplot(1, 4, i + 1)
+                ax.imshow(a, interpolation="nearest", cmap=plt.cm.gray)
+                ax.set_title(titles[i], fontsize=10)
+                ax.set_xticks([])
+                ax.set_yticks([])
+
+            fig.tight_layout()
+            fig.savefig(output_file)
 
 
 if __name__ == "__main__":
@@ -178,7 +190,7 @@ if __name__ == "__main__":
     wavelet_transform = WaveletTransform(original_file)
     wavelet_transform.perform_wavelet_transform()
     wavelet_transform.show_wavelet_transform()
-    wavelet_transform.save_image("./images/wavelet_transform.jpg")
+    wavelet_transform.save_wavelet_transform_figure("./images/wavelet_transform.jpg")
 """
     enchanted = ImageEnhancement(original_file)
     enchanted.show_image(window_name="Original Image")
