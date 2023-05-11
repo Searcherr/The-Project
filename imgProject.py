@@ -203,6 +203,7 @@ class FourierTransform:
 
 
 if __name__ == "__main__":
+    """
     path_to_original_image = "./images/Samoyed-dog.webp"
     image = cv2.imread(path_to_original_image)
     cv2.imshow("Original Image", image)
@@ -213,68 +214,71 @@ if __name__ == "__main__":
     blur = ImageBlur(path_to_original_image)
     blur.apply_gaussian_blur(kernel_size=(15, 15), sigma_x=0)
     blur.save_blurred_image('./images/blured_image.jpg')
-    #blur.show_blurred_image()
+    blur.show_blurred_image()
     blured_image_path = "./images/blured_image.jpg"
 
     # Testing ImageEnhancement class
     enhance = ImageEnhancement(blured_image_path)
 
     # Gamma Correction
-    enhance.gamma_correction(gamma=0.5)
+    enhance.gamma_correction(gamma=2.5)
     enhance.save_image('./images/gamma_correction_image.jpg')
-    #enhance.show_image(window_name="Gamma Correction")
-
+    enhance.show_image(window_name="Gamma Correction")
+"""
 
     # 2d-filtering
-    """
-    enhance.filter2D(EDGE_DETECTION_KERNEL)
-    enhance.save_image('./images/2dfilter_with_EDGE_kernel_image.jpg')
-    enhance.show_image(window_name="filter2d with EDGE_DETECTION kernel")
-"""
+
+    #enhance.filter2D(EDGE_DETECTION_KERNEL)
+    #enhance.save_image('./images/2dfilter_with_EDGE_kernel_image.jpg')
+    #enhance.show_image(window_name="filter2d with EDGE_DETECTION kernel")
+
+
     # Edge Detection Method
-    """
-    enhance.edge_detection_filter()
-    enhance.save_image('./images/edge_detection_image.jpg')
-    enhance.show_image(window_name="EDGE_DETECTION kernel")
-"""
+
+    #enhance.edge_detection_filter()
+    #enhance.save_image('./images/edge_detection_image.jpg')
+    #enhance.show_image(window_name="EDGE_DETECTION kernel")
+
 
     # Sharpen Method
+    """
     enhance.sharpen_filter()
     enhance.save_image('./images/sharpen_image.jpg')
-    #enhance.show_image(window_name="SHARPEN kernel")
+    enhance.show_image(window_name="SHARPEN kernel")
 
     # Identity Filter
     enhance.identity_filter()
     enhance.save_image('./images/identity_image.jpg')
-    #enhance.show_image(window_name="IDENTITY kernel")
+    enhance.show_image(window_name="IDENTITY kernel")
 
     # Box Blur Filter
     enhance.box_blur_filter()
     enhance.save_image('./images/box_blur_image.jpg')
-    #enhance.show_image(window_name="BOX_BLUR kernel")
+    enhance.show_image(window_name="BOX_BLUR kernel")
 
     # Gaussian Blur
     enhance.gaussian_blur_filter()
     enhance.save_image('./images/gaussian_blur_image.jpg')
-    #enhance.show_image(window_name="GAUSSIAN_BLUR kernel")
+    enhance.show_image(window_name="GAUSSIAN_BLUR kernel")
 
     # Zero Kernel Blurring
     enhance.zero_kernel_blurring_filter()
     enhance.save_image('./images/zero_kernel_image.jpg')
-    #enhance.show_image(window_name="ZERO_KERNEL kernel")
+    enhance.show_image(window_name="ZERO_KERNEL kernel")
 
     # Median Blurring
     enhance.median_filter()
     enhance.save_image('./images/median_blurring_image.jpg')
-    #enhance.show_image(window_name="Median Blurring")
-
+    enhance.show_image(window_name="Median Blurring")
+"""
     # Wavelet Transformation
+
     the_image = "./images/Samoyed-dog.webp"
 
     wavelet_transform = WaveletTransform(the_image)
     wavelet_transform.perform_wavelet_transform()
-    #wavelet_transform.show_wavelet_transform()
-    #wavelet_transform.save_wavelet_transform_figure("./images/wavelet_transform.jpg")
+    wavelet_transform.show_wavelet_transform()
+    wavelet_transform.save_wavelet_transform_figure("./images/wavelet_transform.jpg")
 
     # Fourier Transformation
     fourier = FourierTransform("./images/Samoyed-bw.jpg")
@@ -285,78 +289,19 @@ if __name__ == "__main__":
 
     print(fourier.magnitude_spectrum.shape)
 
-"""
+
     fourier = FourierTransform("./images/Samoyed-bw.jpg")
     fourier.set_fft()
     fourier.set_magnitude_spectrum()
     fourier.show_frequency_spectrum()
     fourier.show_spectrum_plt()
-"""
 
-"""    
+
+
     original_file = "./images/Samoyed-dog.webp"
 
     wavelet_transform = WaveletTransform(original_file)
     wavelet_transform.perform_wavelet_transform()
     wavelet_transform.show_wavelet_transform()
     wavelet_transform.save_wavelet_transform_figure("./images/wavelet_transform.jpg")
-"""
-"""
-    enchanted = ImageEnhancement(original_file)
-    enchanted.show_image(window_name="Original Image")
 
-    enchanted.filter2D(BOX_BLUR_KERNEL)
-    enchanted.save_image('./images/edge_detection_image.jpg')
-    enchanted.show_image(window_name="BOX_BLUR_KERNEL")
-
-    enchanted.fourier_transform(method="sft")
-    enchanted.save_image('./images/fourier_image.jpg')
-    enchanted.show_image(window_name="Fourier sft")
-"""
-"""
-    blur = ImageBlur(path_to_file)
-    blur.apply_gaussian_blur(kernel_size=(15, 15), sigma_x=0)
-    blur.save_blurred_image('./images/blured_image.jpg')
-    blur.show_blurred_image()
-
-    blured_image_path = "./blured_image.jpg"
-
-    enhance = ImageEnhancement(blured_image_path)
-
-    enhance.gamma_correction(gamma=0.5)
-    enhance.save_image('./images/gamma_correction_image.jpg')
-    enhance.show_image(window_name="Gamma Correction")
-
-    kernel_edge_detection = np.array([[-1, -1, -1],
-                                      [-1, 8, -1],
-                                      [-1, -1, -1]])
-    kernel_sharpen = np.array([[0, -1, 0],
-                               [-1, 5, -1],
-                               [0, -1, 0]])
-    enhance.filter2D(kernel_edge_detection)
-    enhance.save_image('./images/Filter2D_image.jpg')
-    enhance.show_image(window_name="Filter 2D")
-    enhance.median_filter(filter_size=5)
-    enhance.save_image('./images/median_filter_image.jpg')
-    enhance.show_image(window_name="Median Filter")
-
-    enhance.fourier_transform(method="dft")
-    enhance.save_image('./images/fourier_transform_image.jpg')
-    enhance.show_image(window_name="Fourier Transform")
-
-    image = cv2.imread(path_to_file)
-
-    # Creating the kernel(2d convolution matrix)
-    kernel2 = np.array([[-1, -1, -1],
-                        [-1, 8, -1],
-                        [-1, -1, -1]])
-
-    # Applying the filter2D() function
-    img = cv2.filter2D(src=image, ddepth=-1, kernel=kernel2)
-
-    # Shoeing the original and output image
-    cv2.imshow('Original', image)
-    cv2.imshow('Kernel Blur', img)
-
-    cv2.waitKey()
-    cv2.destroyAllWindows()"""
