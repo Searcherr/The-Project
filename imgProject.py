@@ -100,7 +100,7 @@ class ImageEnhancement:
             self.image = cv2.filter2D(self.image, output_image_depth, conv_kernel)
 
     # Blurring image using median filter
-    def median_filter(self, filter_size=3):
+    def median_filter(self, filter_size=5):
         if self.image is not None:
             self.image = cv2.medianBlur(self.image, filter_size)
 
@@ -125,6 +125,13 @@ class WaveletTransform:
         if self.image is None:
             raise ValueError(f"Failed to load input file '{self.input_file}'.")
         self.coeffs = None
+
+    def show_original_image(self, window_name="Original Image"):
+        if self.image is not None:
+            cv2.imshow(window_name, self.image)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
 
     def perform_wavelet_transform(self):
         if self.image is not None:
@@ -209,18 +216,20 @@ if __name__ == "__main__":
     cv2.imshow("Original Image", image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
+    """
     # Testing ImageBlur class
+    """
     blur = ImageBlur(path_to_original_image)
     blur.apply_gaussian_blur(kernel_size=(15, 15), sigma_x=0)
     blur.save_blurred_image('./images/blured_image.jpg')
     blur.show_blurred_image()
     blured_image_path = "./images/blured_image.jpg"
-
+"""
     # Testing ImageEnhancement class
-    enhance = ImageEnhancement(blured_image_path)
+    #enhance = ImageEnhancement(path_to_original_image)
 
     # Gamma Correction
+    """
     enhance.gamma_correction(gamma=2.5)
     enhance.save_image('./images/gamma_correction_image.jpg')
     enhance.show_image(window_name="Gamma Correction")
@@ -234,70 +243,78 @@ if __name__ == "__main__":
 
 
     # Edge Detection Method
+    """
+    enhance.edge_detection_filter()
+    enhance.save_image('./images/edge_detection_image.jpg')
+    enhance.show_image(window_name="EDGE_DETECTION kernel")
 
-    #enhance.edge_detection_filter()
-    #enhance.save_image('./images/edge_detection_image.jpg')
-    #enhance.show_image(window_name="EDGE_DETECTION kernel")
-
-
+    """
     # Sharpen Method
     """
     enhance.sharpen_filter()
     enhance.save_image('./images/sharpen_image.jpg')
     enhance.show_image(window_name="SHARPEN kernel")
-
+    """
     # Identity Filter
+    """
     enhance.identity_filter()
     enhance.save_image('./images/identity_image.jpg')
     enhance.show_image(window_name="IDENTITY kernel")
-
+    """
     # Box Blur Filter
+    """
     enhance.box_blur_filter()
     enhance.save_image('./images/box_blur_image.jpg')
     enhance.show_image(window_name="BOX_BLUR kernel")
-
+    """
     # Gaussian Blur
+    """
     enhance.gaussian_blur_filter()
     enhance.save_image('./images/gaussian_blur_image.jpg')
     enhance.show_image(window_name="GAUSSIAN_BLUR kernel")
+    """
 
     # Zero Kernel Blurring
+    """
     enhance.zero_kernel_blurring_filter()
     enhance.save_image('./images/zero_kernel_image.jpg')
     enhance.show_image(window_name="ZERO_KERNEL kernel")
-
+    """
     # Median Blurring
+    """
     enhance.median_filter()
     enhance.save_image('./images/median_blurring_image.jpg')
     enhance.show_image(window_name="Median Blurring")
-"""
+    """
     # Wavelet Transformation
-
+    """
     the_image = "./images/Samoyed-dog.webp"
 
     wavelet_transform = WaveletTransform(the_image)
     wavelet_transform.perform_wavelet_transform()
+    wavelet_transform.show_original_image()
     wavelet_transform.show_wavelet_transform()
     wavelet_transform.save_wavelet_transform_figure("./images/wavelet_transform.jpg")
-
+"""
     # Fourier Transformation
-    fourier = FourierTransform("./images/Samoyed-bw.jpg")
+    fourier = FourierTransform("./images/Samoyed-dog.webp")
     fourier.set_fft()
     fourier.set_magnitude_spectrum()
     fourier.show_frequency_spectrum()
     fourier.show_spectrum_plt()
 
-    print(fourier.magnitude_spectrum.shape)
+    #print(fourier.magnitude_spectrum.shape)
 
-
+    """
+    fourier = FourierTransform("./images/Samoyed-bw.jpg")
     fourier = FourierTransform("./images/Samoyed-bw.jpg")
     fourier.set_fft()
     fourier.set_magnitude_spectrum()
     fourier.show_frequency_spectrum()
     fourier.show_spectrum_plt()
+"""
 
-
-
+"""
     original_file = "./images/Samoyed-dog.webp"
 
     wavelet_transform = WaveletTransform(original_file)
@@ -305,3 +322,4 @@ if __name__ == "__main__":
     wavelet_transform.show_wavelet_transform()
     wavelet_transform.save_wavelet_transform_figure("./images/wavelet_transform.jpg")
 
+"""
